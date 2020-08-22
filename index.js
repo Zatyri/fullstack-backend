@@ -24,8 +24,13 @@ let persons = [
     }    
 ]
 
-app.get('/', (req, res) => {
-    res.send('<h1>Nn data here</h1>')
+let howManyPersons = persons.length
+let currentDate = new Date()
+
+const info = `<p>Phonebook has inf for ${howManyPersons}</p> <p>${currentDate}</p>`
+
+app.get('/info', (req, res) => {
+    res.send(info)
 })
 
 app.get('/api/persons', (req, res) => {
@@ -36,4 +41,6 @@ app.get('/api/persons', (req, res) => {
 const port = 3001
 app.listen(port)
 console.log(`Server running on port ${port}`);
+
+
 
