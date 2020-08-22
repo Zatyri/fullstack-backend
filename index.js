@@ -1,12 +1,9 @@
 const express = require('express')
-const app = express()
-
-
-app.use(express.json())
-
 const morgan = require('morgan')
-app.use(morgan('tiny'))
-
+const app = express()
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :input'))
+morgan.token('input', function (req, res) { return JSON.stringify(req.body) })
+app.use(express.json())
 
 let persons = [  
     {
@@ -41,16 +38,12 @@ app.get('/info', (req, res) => {
 })
 
 app.get('/api/persons', (req, res) => {
-    console.log(morgan('tiny'));
-    
     res.json(persons)
 })
 
 app.get('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)
-    const person = persons.find(person => person.id === id)
-    
-    console.log(morgan('tiny'));
+    const person = persons.find(person => person.id === id) 
     if(person) {
         res.json(person)
     } else {       
@@ -63,7 +56,6 @@ app.delete('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)
     const person = persons.find(person => person.id === id)
     persons = persons.filter(person => person.id !== id)
-    console.log(morgan('tiny'));
     if(person) {
         res.status(204).end()
         res.send()
@@ -75,7 +67,8 @@ app.delete('/api/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
     const person = req.body
-    console.log(morgan('tiny'));
+
+
     if(checkDataValidity(person)){
         res.status(400).json({
             error: 'Name missing or not unique'
