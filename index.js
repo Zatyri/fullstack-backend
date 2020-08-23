@@ -3,7 +3,6 @@ const morgan = require('morgan')
 const cors = require('cors')
 const app = express()
 const Person = require('./models/person')
-const { response } = require('express')
 
 app.use(express.static('build'))
 app.use(express.json())
@@ -26,7 +25,7 @@ app.get('/api/persons', (req, res) => {
         })   
 })
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
     const id = req.params.id
     Person.find({id})
         .then(person => { 
@@ -40,7 +39,7 @@ app.get('/api/persons/:id', (req, res) => {
         .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (req, res) => {    
+app.delete('/api/persons/:id', (req, res, next) => {    
     Person.findByIdAndRemove(req.params.id)
         .then(result => {
             res.status(204).end()
@@ -65,6 +64,21 @@ app.post('/api/persons', (req, res) => {
            res.json(addedPerson)
         })
     }
+})
+
+app.put('/api/persons/:id', (req, res, next) => {
+    const body = req.body
+
+    const newPerson = {
+        name: body.name,
+        number: body.number,        
+    }
+
+    Person.findByIdAndUpdate(body.id, newPerson, {new: true})
+        .then(updatedPerson => {
+            res.json(updatedPerson)
+        }) 
+        .catch(error => next(error))
 })
 
 const PORT = process.env.PORT || 3001
