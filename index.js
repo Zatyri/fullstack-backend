@@ -37,11 +37,7 @@ app.get('/api/persons/:id', (req, res) => {
                 res.status(404).end()
             }
         })
-        .catch(error => {
-            console.log(error);
-            res.status(500).end()
-            
-        })
+        .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (req, res) => {    
@@ -49,10 +45,7 @@ app.delete('/api/persons/:id', (req, res) => {
         .then(result => {
             res.status(204).end()
         })
-        .catch(error => {
-            console.log(error);
-            res.status(400).end()
-        })
+        .catch(error => next(error))
 })
 
 app.post('/api/persons', (req, res) => {
@@ -101,4 +94,15 @@ const checkDataValidity = (person) => {
     } */
     return false
 }
+
+const errorHandler = (error, request, response, next) => {
+    console.log(error.message);
+    
+    if(error.name === 'CastError'){
+        return response.status(400).send({error:'malformatted id'})
+    }
+    next(error)
+}
+
+app.use(errorHandler)
 
