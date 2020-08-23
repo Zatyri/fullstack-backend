@@ -1,9 +1,11 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
 require('dotenv').config()
 const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
 
 mongoose.set('useFindAndModify', false)
-mongoose.set('useCreateIndex', true);
+mongoose.set('useCreateIndex', true)
 
 const url = process.env.MONGODB_URI
 
@@ -16,30 +18,30 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
     console.log('error connecting to MongoDB:', error.message)
   })
 
-  const phonebookSchema = new mongoose.Schema({
-    name: {
-      type: String,
-      minlength: 3,
-      unique: true,
-      required: true
-    },
-    number: {
-      type: String,
-      minlength: 8,
-      unique: true,
-      required: true
-    },
-    id: Number,
+const phonebookSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    minlength: 3,
+    unique: true,
+    required: true
+  },
+  number: {
+    type: String,
+    minlength: 8,
+    unique: true,
+    required: true
+  },
+  id: Number,
 })
 
 phonebookSchema.plugin(uniqueValidator)
 
 phonebookSchema.set('toJSON', {
   transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString()    
+    returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
     delete returnedObject.__v
-    
+
   }
 })
 
