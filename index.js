@@ -87,23 +87,8 @@ app.listen(PORT, () => {
 const idGenerator = () => {
     while(true){
         let id = Math.floor(Math.random() * 100) + 1
-        /*const excists = persons.find(person => person.id === id)
-        if(!excists){
-            return id
-        }*/
         return id
     }
-}
-
-const checkDataValidity = (person) => {
-    const name = person.name
-    const number = person.number
-    if(name.length === 0 || number.length === 0){
-        return true
-    } /*else if(persons.find(pers => pers.name === name)){
-        return true
-    } */
-    return false
 }
 
 const errorHandler = (error, request, response, next) => {
