@@ -72,8 +72,6 @@ app.delete('/api/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
     const person = req.body
-
-
     if(checkDataValidity(person)){
         res.status(400).json({
             error: 'Name missing or not unique'
@@ -81,7 +79,7 @@ app.post('/api/persons', (req, res) => {
     } else {        
         person.id = idGenerator()
         persons = persons.concat(person)
-    res.json(persons)    
+    res.json(person)    
     }
 })
 
