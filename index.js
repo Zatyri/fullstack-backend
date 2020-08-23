@@ -32,9 +32,7 @@ app.get('/api/persons/:id', (req, res) => {
             console.log(person)                   
             if(person[0]){
                 res.json(person)
-            } else {
-                console.log('iran');
-                
+            } else {           
                 res.status(404).end()
             }
         })
@@ -60,8 +58,14 @@ app.post('/api/persons', (req, res) => {
         })
     } else {        
         person.id = idGenerator()
-        persons = persons.concat(person)
-    res.json(person)    
+        const newPerson = new Person({
+            name: person.name,
+            number: person.number,
+            id: person.id            
+        })
+        newPerson.save().then(addedPerson => {
+           res.json(addedPerson)
+        })
     }
 })
 
@@ -74,10 +78,11 @@ app.listen(PORT, () => {
 const idGenerator = () => {
     while(true){
         let id = Math.floor(Math.random() * 100) + 1
-        const excists = persons.find(person => person.id === id)
+        /*const excists = persons.find(person => person.id === id)
         if(!excists){
             return id
-        }
+        }*/
+        return id
     }
 }
 
@@ -86,9 +91,9 @@ const checkDataValidity = (person) => {
     const number = person.number
     if(name.length === 0 || number.length === 0){
         return true
-    } else if(persons.find(pers => pers.name === name)){
+    } /*else if(persons.find(pers => pers.name === name)){
         return true
-    } 
+    } */
     return false
 }
 
